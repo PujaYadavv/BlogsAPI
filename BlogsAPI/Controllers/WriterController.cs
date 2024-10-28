@@ -8,13 +8,17 @@ namespace BlogsAPI.Controllers
     public class WriterController : ControllerBase
     {
         private IWriterServices _writerServices;
-        public WriterController(IWriterServices writerServices) 
+        private ILogger _logger;
+        public WriterController(IWriterServices writerServices ,ILoggerFactory loggerFactory) 
         {
             _writerServices = writerServices;
+            _logger = loggerFactory.CreateLogger<WriterController>();
+
         }
         [HttpGet]
         public async Task<IActionResult> GetAllWriter()
         {
+            _logger.LogError("someone asked for writer list's...");
             List<Writer> writer = await _writerServices.GetAllWriter();
             if (writer != null)
             {

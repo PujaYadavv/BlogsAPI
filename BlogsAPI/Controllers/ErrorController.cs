@@ -7,6 +7,11 @@ namespace BlogsAPI.Controllers
     [ApiController]
     public class ErrorController : ControllerBase
     {
+        private ILogger _logger;
+        public ErrorController(ILoggerFactory loggerFactory)
+        {
+            _logger = loggerFactory.CreateLogger<ErrorController>();
+        }
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> HandleError()
         {
@@ -16,7 +21,8 @@ namespace BlogsAPI.Controllers
                 if (feature != null)
                 {
                     //Log the error to app insights/file
-                    return Problem(detail: feature.Error.Message );
+                    _logger.LogCritical(feature.Error.Message);
+                    return Problem(detail: feature.Error.Message);
                 }
             }
             return Problem();
